@@ -1,1 +1,0 @@
-web: ./werk_server/target/release/werk_server
