@@ -1,0 +1,6 @@
+[submodule "werk-web"]
+	path = werk-web
+	url = https://github.com/kebtech/werk-web.git
+[submodule "werk_server"]
+	path = werk_server
+	url = https://github.com/kebtech/werk_server.git
