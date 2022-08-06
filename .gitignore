@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Rust Server
+./werk_server/target
+
+# Web App
+./werk_web/node_modules
