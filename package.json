@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd werk_server && cargo build && cd .. && cd werk-web && npm run build",
     "start": "cd werk_server && cargo run",
-    "dev": "cd werk-web && npm run watch"
+    "dev": "cd werk-web && npm run watch",
+    "icons": "sh generate_icons.sh",
+    "push": "sh push.sh"
   },
   "repository": {
     "type": "git",
