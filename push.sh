@@ -15,3 +15,7 @@ cd werk_server
 git add .
 git commit -m $VAR
 git push
+
+wait
+
+heroku logs -a cnctd --tail
