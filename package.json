@@ -9,7 +9,8 @@
     "start": "cd werk_server && cargo run",
     "dev": "cd werk-web && npm run watch",
     "icons": "sh generate_icons.sh",
-    "push": "sh push.sh"
+    "push": "sh push.sh",
+    "push_all": "sh push_all.sh"
   },
   "repository": {
     "type": "git",
