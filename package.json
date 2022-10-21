@@ -10,7 +10,8 @@
     "dev": "cd werk-web && npm run watch",
     "icons": "sh generate_icons.sh",
     "push": "sh push.sh",
-    "push_all": "sh push_all.sh"
+    "push_all": "sh push_all.sh",
+    "pull": "sh pull.sh"
   },
   "repository": {
     "type": "git",
