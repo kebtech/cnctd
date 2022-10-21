@@ -1,7 +1,9 @@
 #! /bin/bash
 
-pull
+git pull
 cd werk_server
-pull
+git pull
 cd ..
-cd werk-web pull
+cd werk-web 
+git pull
+cd ..
