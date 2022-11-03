@@ -64,10 +64,10 @@ In its current state, this app has the current functionality (all subject to cha
 - Collections Manager which allows you to create and organize your music projects into Projects, Playlists, and Songs. There is also an additional Note collection type for quick notes. Although all the functionality is technically built, there are still quite a few design choices that need to be made to make sense of this functionality
 - Rhyme dictionary
 - Connecting with another account
-- A player for video and audio which is still in very early stages but kind of works. Still need to design how I want this too look/function
-- Pitch detection/tuner - very elementary right now but gives pretty accurate pitch of any chosen audio source.
-- Audio recorder - also very elementary
-- Tagging for all items is technically supported, but I haven't exposed them yet
+- A player for audio
+- Pitch detection/tuner
+- Audio recorder - very elementary
+- Tagging for Files and Collections
 - Music Dictionary: look up keys and triads
 - Add chords to lyrics
 
