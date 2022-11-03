@@ -5,7 +5,7 @@ This is the overall project folder for the app I'm currently calling cnctd, whic
 
 The problem this app solves is rather simple: I need a place to store and group all my songwriting ideas, including audio and text/musical notation. I've been looking to build something like this for years, and after learning JavaScript and Rust since the start of the pandemic, I finally feel I can fully tackle this task. I've also built it in a way that it can be expanded to cover other creative project organization, such as book-writing.
 
-Although a lot of work has gone into this app and it's quite functional, it's still very much in early development. You can (maybe) find the latest version at https://cnctd.herokuapp.com. Just be gentle as UI design is still very much in flux and the app could be in any state of functionality at any moment.
+<!-- Although a lot of work has gone into this app and it's quite functional, it's still very much in early development. You can (maybe) find the latest version at https://cnctd.herokuapp.com. Just be gentle as UI design is still very much in flux and the app could be in any state of functionality at any moment. -->
 
 Please note: I am self-taught in coding and have been doing it for a little over 2 years now. I have never worked as an engineer within an organization and next to no one has seen my code. Because of this, some of the organization and way things are written may seem bizarre, but I assure you, most things work. And if they don't, they will be fixed. The way I approach coding is to envision the simplest way to build something and try to do it myself with as few libraries as possible. I often do rewrites if I think I could have written something in a more efficient way. 
 
@@ -68,11 +68,11 @@ In its current state, this app has the current functionality (all subject to cha
 - Pitch detection/tuner - very elementary right now but gives pretty accurate pitch of any chosen audio source.
 - Audio recorder - also very elementary
 - Tagging for all items is technically supported, but I haven't exposed them yet
+- Music Dictionary: look up keys and triads
+- Add chords to lyrics
 
 **Future**
 
-- Music dictionary - I've built this into another app, but plan to overhaul it before it ends up here
-- Adding chords to lyrics. I've started this one but need to finish designing
 - Midi router - it's technically there, but the underlying library doesn't seem to properly forward midi signals, so I need to investigate. I've also written this in former projects using a different midi library
 - Sharing of collections both with other users in the app and with the public via a link
 - Video Chat - just started working on this using the Mediasoup framework
