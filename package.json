@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd werk_server && cargo build && cd .. && cd werk-web && npm run build",
+    "build": "build",
     "start": "cd werk_server && cargo run",
     "dev": "cd werk-web && npm run watch",
     "icons": "sh generate_icons.sh",
     "push": "sh push.sh",
     "push_all": "sh push_all.sh",
-    "pull": "sh pull.sh"
+    "pull": "sh pull.sh",
+    "ios": "sh ios.sh"
   },
   "repository": {
     "type": "git",
