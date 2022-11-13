@@ -1,5 +1,17 @@
 {
+  "name": "lambda-s3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "sharp": "^0.30.7"
+    "@ffmpeg-installer/linux-x64": "^4.1.0",
+    "aws-sdk": "^2.1253.0",
+    "aws-xray-sdk": "^3.4.0",
+    "fluent-ffmpeg": "^2.1.2"
   }
 }

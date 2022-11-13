@@ -1,78 +1,73 @@
-// dependencies
-const AWS = require('aws-sdk');
-const util = require('util');
-const sharp = require('sharp');
+console.log('Loading function');
 
-// get reference to S3 client
-const s3 = new AWS.S3();
+const aws = require('aws-sdk');
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const ffmpeg = require('fluent-ffmpeg');
+ffmpeg.setFfmpegPath(ffmpegPath);
 
-exports.handler = async (event, context, callback) => {
+const s3 = new aws.S3();
+const fs = require('fs');
 
-  // Read options from the event parameter.
-  console.log("Reading options from event:\n", util.inspect(event, {depth: 5}));
-  const srcBucket = event.Records[0].s3.bucket.name;
-  // Object key may have spaces or unicode non-ASCII characters.
-  const srcKey    = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, " "));
-  const dstBucket = srcBucket + "-resized";
-  const dstKey    = "resized-" + srcKey;
+exports.handler = async (event, context) => {
+    //console.log('Received event:', JSON.stringify(event, null, 2));
 
-  // Infer the image type from the file suffix.
-  const typeMatch = srcKey.match(/\.([^.]*)$/);
-  if (!typeMatch) {
-      console.log("Could not determine the image type.");
-      return;
-  }
+    // Get the object from the event and show its content type
+    const srcBucket = event.Records[0].s3.bucket.name;
+    const srcKey = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
 
-  // Check that the image type is supported
-  const imageType = typeMatch[1].toLowerCase();
-  if (imageType != "jpg" && imageType != "png") {
-      console.log(`Unsupported image type: ${imageType}`);
-      return;
-  }
+    const dstBucket = srcBucket + '-processed';
+    const dstsKey = 'processed-' + srcKey;
+    const srcExtension = srcKey.slice(srcKey.lastIndexOf('.')).split('.')[1];
+    const srcFilename = srcKey.slice(0, srcKey.lastIndexOf('.'))
 
-  // Download the image from the S3 source bucket.
+    
 
-  try {
-      const params = {
-          Bucket: srcBucket,
-          Key: srcKey
-      };
-      var origimage = await s3.getObject(params).promise();
+    try { 
+        // if (srcExtension === 'temp') {
+        const params = {
+            Bucket: srcBucket,
+            Key: srcKey
+        };
+        const srcFile = await s3.getObject(params).promise();
+        const outputFile = srcFilename + '.mp3';
 
-  } catch (error) {
-      console.log(error);
-      return;
-  }
+        ffmpeg(srcFile).audioCodec('libmp3lame')
+            .audioBitrate(192)
+            .audioChannels(2)
+            .on('end', function() {
+                fs.readFile(outputFile, async (e, data) => {
+                    const destParams = {
+                        Bucket: dstBucket,
+                        Key: outputFile,
+                        Body: data,
+                        ContentType: 'audio/mp3'
+                    };
+                    console.log('uhhhh')
+                    const putResult = await s3.putObject(destParams).promise();
+                })
+            })
+            .output(outputFile)
+            .run()
 
-  // set thumbnail width. Resize will set the height automatically to maintain aspect ratio.
-  const width  = 200;
+        // }
+        
+        
 
-  // Use the sharp module to resize the image and save in a buffer.
-  try {
-      var buffer = await sharp(origimage.Body).resize(width).toBuffer();
+    } catch (error) {
+        console.log(error)
+        return;
+    }
 
-  } catch (error) {
-      console.log(error);
-      return;
-  }
+    
 
-  // Upload the thumbnail image to the destination bucket
-  try {
-      const destparams = {
-          Bucket: dstBucket,
-          Key: dstKey,
-          Body: buffer,
-          ContentType: "image"
-      };
-
-      const putResult = await s3.putObject(destparams).promise();
-
-  } catch (error) {
-      console.log(error);
-      return;
-  }
-
-  console.log('Successfully resized ' + srcBucket + '/' + srcKey +
-      ' and uploaded to ' + dstBucket + '/' + dstKey);
+    // try {
+    //     const { ContentType } = await s3.getObject(params).promise();
+    //     console.log('CONTENT TYPE:', ContentType);
+    //     return ContentType;
+    // } catch (err) {
+    //     console.log(err);
+    //     const message = `Error getting object ${key} from bucket ${bucket}. Make sure they exist and your bucket is in the same region as this function.`;
+    //     console.log(message);
+    //     throw new Error(message);
+    // }
 };
-            
