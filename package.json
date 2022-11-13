@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/kebtech/cnctd/issues"
   },
-  "homepage": "https://github.com/kebtech/cnctd#readme"
+  "homepage": "https://github.com/kebtech/cnctd#readme",
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.2.0"
+  }
 }
