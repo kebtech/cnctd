@@ -12,7 +12,10 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": true,
+      "window": {
+        "all": true
+      }
     },
     "bundle": {
       "active": true,
@@ -56,10 +59,13 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 800,
         "resizable": true,
         "title": "cnctd",
-        "width": 800
+        "width": 1200,
+        "theme": "Dark",
+        "hiddenTitle": true,
+        "titleBarStyle": "Overlay"
       }
     ]
   }

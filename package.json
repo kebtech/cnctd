@@ -12,7 +12,8 @@
     "push": "sh push.sh",
     "push_all": "sh push_all.sh",
     "pull": "sh pull.sh",
-    "ios": "sh ios.sh"
+    "ios": "sh ios.sh",
+    "android": "sh android.sh"
   },
   "repository": {
     "type": "git",
