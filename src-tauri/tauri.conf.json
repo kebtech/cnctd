@@ -1,8 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
-    "beforeBuildCommand": "npm run build",
-    "beforeDevCommand": "npm run start",
     "devPath": "http://192.168.1.7:5050",
     "distDir": "../werk_server/static"
   },
@@ -15,8 +13,20 @@
       "all": true,
       "window": {
         "all": true
+      },
+      "path": {
+        "all": true
+      },
+      "fs": {
+        "scope": ["**"]
+      },
+      "clipboard": {
+        "all": true,
+        "writeText": true,
+        "readText": true
       }
     },
+    "macOSPrivateApi": true,
     "bundle": {
       "active": true,
       "category": "DeveloperTool",
@@ -32,7 +42,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "world.cnctd.desktop",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -65,7 +75,8 @@
         "width": 1200,
         "theme": "Dark",
         "hiddenTitle": true,
-        "titleBarStyle": "Overlay"
+        "titleBarStyle": "Overlay",
+        "transparent": true
       }
     ]
   }
