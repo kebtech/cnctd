@@ -16,6 +16,6 @@ git add .
 git commit -m $VAR
 git push
 
-wait
+wait 
 
-heroku logs -a cnctd --tail
+sh package.sh

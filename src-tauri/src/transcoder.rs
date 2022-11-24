@@ -208,9 +208,9 @@ impl Transcoder {
 // transcode-audio in.mp3 out.mp3 anull 30
 pub fn transcode(filename: String) -> String {
     ffmpeg::init().unwrap();
-    
+    let timestamp = crate::timestamp().to_string();
     let input = &filename.to_string();
-    let output = "./recordings/output.ogg";
+    let output = format!("{}{}{}", "./recordings/", timestamp, ".ogg");
     let filter = "anull".to_owned();
     // let seek = env::args().nth(4).and_then(|s| s.parse::<i64>().ok());
 

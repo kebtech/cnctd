@@ -28,4 +28,4 @@ git push
 
 wait
 
-heroku logs -a cnctd --tail
+sh package.sh

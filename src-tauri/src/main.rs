@@ -5,7 +5,7 @@ windows_subsystem = "windows"
 
 #[cfg(debug_assertions)]
 #[cfg(target_os = "macos")]
-embed_plist::embed_info_plist!("../../werk-web/ios/App/App/Info.plist");
+embed_plist::embed_info_plist!("../Info.plist");
 
 pub mod recorder;
 pub mod router;
@@ -44,3 +44,7 @@ fn main() {
 		.expect("error while running tauri application");
 }
 
+pub fn timestamp() -> i64 {
+	let timestamp = chrono::Duration::num_milliseconds(&chrono::Duration::from_std(std::time::SystemTime::now().duration_since(std::time::SystemTime::UNIX_EPOCH).unwrap()).unwrap());
+	timestamp
+}
