@@ -16,9 +16,6 @@ use window_vibrancy::{apply_blur, apply_vibrancy, NSVisualEffectMaterial};
 
 fn main() {
 	tauri::Builder::default()
-		.on_page_load(|window, _| {
-			// window.open_devtools();
-		})
 		.invoke_handler(tauri::generate_handler![
 			router::start_recording,
 			router::get_recorder_inputs,

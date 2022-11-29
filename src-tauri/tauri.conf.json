@@ -51,7 +51,7 @@
       "longDescription": "",
       "macOS": {
         "entitlements": "Entitlements.plist",
-        "exceptionDomain": "",
+        "exceptionDomain": null,
         "frameworks": [],
         "providerShortName": null
       },
