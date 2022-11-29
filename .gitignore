@@ -108,3 +108,5 @@ dist
 
 # Web App
 ./werk_web/node_modules
+
+./developerID_application.cer

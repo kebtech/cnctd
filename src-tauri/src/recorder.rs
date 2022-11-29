@@ -2,7 +2,7 @@
 // use crate::sample_formats::{SampleFormat, FromSample};
 
 use chrono::{Utc, DateTime};
-use cpal::{Device, SupportedStreamConfig, StreamConfig, Stream};
+use cpal::{Device, StreamConfig, Stream};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use dasp::sample::FromSample;
 use dasp::{interpolate::linear::Linear, signal, Signal};
@@ -15,6 +15,7 @@ use std::sync::{Arc, Mutex};
 
 use anyhow::anyhow;
 use tauri::{self, Manager, AppHandle};
+use crate::router::OutgoingMessage;
 use crate::transcoder;
 // use crate::encoder::encode;
 
@@ -38,7 +39,7 @@ pub struct RecordHandle {
     /// Option is only taken in "stop".
     clip: Arc<Mutex<Option<RecordState>>>,
     pub writer: Arc<Mutex<Option<WavWriter<BufWriter<File>>>>>,
-    pub filename: String,
+    pub path: String,
 }
 
 
@@ -48,7 +49,7 @@ impl RecordHandle {
         // let clip = self.clip.lock().unwrap().take().unwrap().clip;
         self.writer.lock().unwrap().take().unwrap().finalize().unwrap();
         println!("stream dropped");
-        let encoded = AudioClip::encode(self.filename)?;
+        let encoded = AudioClip::encode(self.path)?;
         Ok(encoded)
         // handle.writer.lock().unwrap().take().unwrap().finalize().unwrap();
         // clip.lock().unwrap().take().unwrap().finalize()?;
@@ -57,8 +58,6 @@ impl RecordHandle {
         // clip
     }
 }
-
-type RecordStateHandle = Arc<Mutex<Option<RecordState>>>;
 
 pub trait StreamHandle {
     fn sample_rate(&self) -> u32;
@@ -145,19 +144,19 @@ impl AudioClip {
             sample_rate: input.config.sample_rate.0,
         };
 
-        let filename = app_handle.path_resolver().app_local_data_dir().unwrap();
-        let filename = filename.to_str().unwrap();
         // let PATH: &str = &format!("{}{}", &filename, "/recorded.wav");
+        let dir = app_handle.path_resolver().resource_dir().unwrap().into_os_string().into_string().unwrap();
+        let path = format!("{}/recordings/{}", dir, "recorded.wav");
         
-        const PATH: &str = "./recordings/recorded.wav";
-        println!("PATH: {}", PATH);
+        // const PATH: &str = "recordings/recorded.wav";
+        // println!("PATH: {}", PATH);
+        println!("path: {}", path);
         let config = &input.device.default_input_config()?;
         let spec = wav_spec_from_config(&config);
-        let writer = hound::WavWriter::create(PATH, spec)?;
+        let writer = hound::WavWriter::create(path.to_string(), spec)?;
         let writer = Arc::new(Mutex::new(Some(writer)));
     
         let clip = Arc::new(Mutex::new(Some(RecordState { clip })));
-        let clip_2 = clip.clone();
         
     
         println!("start recording");
@@ -167,16 +166,6 @@ impl AudioClip {
 
         let writer_2 = writer.clone();
     
-        fn write_input_data<T>(input: &[T], channels: u16, writer: &RecordStateHandle) where T: cpal::Sample, {
-            if let Ok(mut guard) = writer.try_lock() {
-                if let Some(state) = guard.as_mut() {
-                    for frame in input.chunks(channels.into()) {
-                        state.clip.samples.push(frame[0].to_f32());
-                        state.clip.samples.push(frame[1].to_f32());
-                    }
-                }
-            }
-        }
         fn write_to_wav<T, U>(input: &[T], writer: &WavWriterHandle) where T: cpal::Sample, U:cpal::Sample + hound::Sample + FromSample<T> {
             if let Ok(mut guard) = writer.try_lock() {
                 if let Some(writer) = guard.as_mut() {
@@ -195,20 +184,6 @@ impl AudioClip {
                 sample_format: hound::SampleFormat::Float,
             }
         }
-        // fn sample_format(format: cpal::SampleFormat) -> hound::SampleFormat {
-        //     if format.is_finite() && (format as f32) as f64 == format {
-        //         hound::SampleFormat::Float
-        //     } else {
-        //         hound::SampleFormat::Int
-        //     }
-        // }
-
-        let channels = input.config.channels;
-        // let stream = input.device.build_input_stream(
-        //     &input.config.into(), 
-        //     move |data, _: &_| { write_input_data::<f32>(data, channels, &clip_2) }, 
-        //     err_fn,  
-        // )?;
         let stream = input.device.build_input_stream(
             &input.config.into(), 
             move |data, _: &_| { write_to_wav::<f32, f32>(data, &writer_2) }, 
@@ -217,7 +192,7 @@ impl AudioClip {
     
         stream.play()?;
     
-        Ok(RecordHandle { stream, clip, writer, filename: PATH.to_string() })
+        Ok(RecordHandle { stream, clip, writer, path })
     
     }
     pub fn resample(&self, sample_rate: u32) -> AudioClip {
@@ -231,7 +206,6 @@ impl AudioClip {
         let b = signal.next();
 
         let linear = Linear::new(a, b);
-        let linear_r = Linear::new(a, b);
         
 
         AudioClip {
@@ -244,20 +218,7 @@ impl AudioClip {
     }
 
     pub fn encode(filename: String) -> Result<String,anyhow::Error> {
-        // let mut f = std::fs::File::open(&filename)?;
-        let output = transcoder::transcode(filename.to_string());
-        // std::thread::sleep(std::time::Duration::from_secs(30));
-
-        // let file = std::fs::File::open(&filename)?;
-        // let file = hound::WavReader::open(filename)?;
-        // let mut file = file.into_inner().into_inner();
-
-
-        // // let mut file = file.into_inner();
-        // let (_, b) = wav::read(&mut file)?;
-        // let audio = b.try_into_sixteen().map_err(|b| { anyhow!("bit depth error") })?;
-        // let opus = ogg_opus::encode::<16000, 2>(&audio)?;
-        // Ok(opus)
+        let output = transcoder::transcode(filename.to_string())?;
         Ok(output)
     }
 }

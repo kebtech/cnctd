@@ -3,16 +3,13 @@ all(not(debug_assertions), target_os = "windows"),
 windows_subsystem = "windows"
 )]
 
-#[cfg(debug_assertions)]
-#[cfg(target_os = "macos")]
-embed_plist::embed_info_plist!("../Info.plist");
+// #[cfg(debug_assertions)]
+// #[cfg(target_os = "macos")]
+// embed_plist::embed_info_plist!("../Info.plist");
 
 pub mod recorder;
 pub mod router;
-pub mod encoder;
 pub mod transcoder;
-use serde::{Serialize, Deserialize};
-use cpal::{Stream, traits::{DeviceTrait, HostTrait, StreamTrait}};
 use tauri::Manager;
 use window_vibrancy::{apply_blur, apply_vibrancy, NSVisualEffectMaterial};
 
@@ -20,7 +17,7 @@ use window_vibrancy::{apply_blur, apply_vibrancy, NSVisualEffectMaterial};
 fn main() {
 	tauri::Builder::default()
 		.on_page_load(|window, _| {
-			window.open_devtools();
+			// window.open_devtools();
 		})
 		.invoke_handler(tauri::generate_handler![
 			router::start_recording,

@@ -18,21 +18,26 @@
         "all": true
       },
       "fs": {
+        "all": true,
         "scope": ["**"]
       },
       "clipboard": {
         "all": true,
         "writeText": true,
         "readText": true
+      },
+      "protocol": {
+        "asset": true,
+        "assetScope": ["**"]
       }
     },
     "macOSPrivateApi": true,
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
+      "category": "Music",
+      "copyright": "2022 kebTech, LLC",
       "deb": {
-        "depends": []
+        "depends": ["*"]
       },
       "externalBin": [],
       "icon": [
@@ -45,14 +50,13 @@
       "identifier": "world.cnctd.desktop",
       "longDescription": "",
       "macOS": {
-        "entitlements": null,
+        "entitlements": "Entitlements.plist",
         "exceptionDomain": "",
         "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
+        "providerShortName": null
       },
-      "resources": [],
-      "shortDescription": "",
+      "resources": ["recordings"],
+      "shortDescription": "organize your songwriting",
       "targets": "all",
       "windows": {
         "certificateThumbprint": null,
@@ -61,7 +65,12 @@
       }
     },
     "security": {
-      "csp": null
+      "csp": {
+        "default-src": "blob: data: filesystem: ws: wss: http: https: tauri: tauri://localhost 'unsafe-eval' 'unsafe-inline' 'self' asset: https://asset.localhost", 
+        "script-src": "'unsafe-eval'", 
+        "media-src": "asset: https://asset.localhost tauri://localhost asset://localhost https://cnctd.world https://werkfiles.s3.amazonaws.com data:",
+        "Access-Control-Allow-Origin": "tauri://localhost asset://localhost asset: https://asset.localhost"
+      }
     },
     "updater": {
       "active": false

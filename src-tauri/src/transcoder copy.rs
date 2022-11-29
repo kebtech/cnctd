@@ -1,4 +1,3 @@
-use anyhow::anyhow;
 use ffmpeg_next as ffmpeg;
 
 use std::env;
@@ -75,8 +74,8 @@ fn transcoder<P: AsRef<Path>>(
         .expect("could not find best audio stream");
     let context = ffmpeg::codec::context::Context::from_parameters(input.parameters())?;
     let mut decoder = context.decoder().audio()?;
+    // let codec = encoder::find_by_name("liblame")
     let codec = ffmpeg::encoder::find(octx.format().codec(path, media::Type::Audio))
-    // let codec = encoder::find_by_name("libopus")
         .expect("failed to find encoder")
         .audio()?;
     let global = octx
@@ -112,8 +111,8 @@ fn transcoder<P: AsRef<Path>>(
             .unwrap(),
     );
     
-    encoder.set_bit_rate(128000);
-    encoder.set_max_bit_rate(192000);
+    encoder.set_bit_rate(128);
+    encoder.set_max_bit_rate(192);
 
     encoder.set_time_base((1, decoder.rate() as i32));
     output.set_time_base((1, decoder.rate() as i32));
@@ -208,18 +207,18 @@ impl Transcoder {
 //
 // Example 3: Seek to a specified position (in seconds)
 // transcode-audio in.mp3 out.mp3 anull 30
-pub fn transcode(path: String) -> Result<String, anyhow::Error> {
+pub fn transcode(path: String) -> String {
     ffmpeg::init().unwrap();
     let timestamp = crate::timestamp().to_string();
     let input = &path.to_string();
-    let dir = path.strip_suffix("recorded.wav").ok_or(anyhow!("error creating directory"))?;
+    let dir = path.strip_suffix("recorded.wav").unwrap();
     let output = format!("{}/encoded_{}.mp3", dir, timestamp);
     let filter = "anull".to_owned();
     // let seek = env::args().nth(4).and_then(|s| s.parse::<i64>().ok());
 
-    let mut ictx = format::input(&input)?;
-    let mut octx = format::output(&output)?;
-    let mut transcoder = transcoder(&mut ictx, &mut octx, &output, &filter)?;
+    let mut ictx = format::input(&input).unwrap();
+    let mut octx = format::output(&output).unwrap();
+    let mut transcoder = transcoder(&mut ictx, &mut octx, &output, &filter).unwrap();
 
     // if let Some(position) = seek {
     //     // If the position was given in seconds, rescale it to ffmpegs base timebase.
@@ -230,7 +229,7 @@ pub fn transcode(path: String) -> Result<String, anyhow::Error> {
     // }
 
     octx.set_metadata(ictx.metadata().to_owned());
-    octx.write_header()?;
+    octx.write_header().unwrap();
 
     for (stream, mut packet) in ictx.packets() {
         if stream.index() == transcoder.stream {
@@ -249,6 +248,6 @@ pub fn transcode(path: String) -> Result<String, anyhow::Error> {
     transcoder.send_eof_to_encoder();
     transcoder.receive_and_process_encoded_packets(&mut octx);
 
-    octx.write_trailer()?;
-    Ok(output)
+    octx.write_trailer().unwrap();
+    output
 }
