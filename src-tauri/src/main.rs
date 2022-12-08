@@ -3,13 +3,14 @@ all(not(debug_assertions), target_os = "windows"),
 windows_subsystem = "windows"
 )]
 
-// #[cfg(debug_assertions)]
-// #[cfg(target_os = "macos")]
-// embed_plist::embed_info_plist!("../Info.plist");
+#[cfg(debug_assertions)]
+#[cfg(target_os = "macos")]
+embed_plist::embed_info_plist!("../Info.plist");
 
 pub mod recorder;
 pub mod router;
-pub mod transcoder;
+pub mod tuner;
+// pub mod transcoder;
 use tauri::Manager;
 use window_vibrancy::{apply_blur, apply_vibrancy, NSVisualEffectMaterial};
 
@@ -20,6 +21,8 @@ fn main() {
 			router::start_recording,
 			router::get_recorder_inputs,
 			router::stop_recording,
+			router::start_tuner,
+			router::stop_tuner
 		])
 		.setup(|app| {
 			let window = app.get_window("main").unwrap();

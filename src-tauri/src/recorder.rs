@@ -4,21 +4,23 @@
 use chrono::{Utc, DateTime};
 use cpal::{Device, StreamConfig, Stream};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
-use dasp::sample::FromSample;
-use dasp::{interpolate::linear::Linear, signal, Signal};
+use dasp::sample::{Sample, FromSample};
+// use dasp::{interpolate::linear::Linear, signal, Signal};
 
-use hound::WavWriter;
+use hound::{WavWriter, WavSpec, WavReader, WavSpecEx};
+use serde::{Serialize, Deserialize};
 use serde_json::json;
+use wav::Header;
 use std::fs::File;
-use std::io::BufWriter;
+use std::io::{BufWriter, BufReader, Write};
+use std::path::Path;
 use std::sync::{Arc, Mutex};
 
 use anyhow::anyhow;
-use tauri::{self, Manager, AppHandle};
-use crate::router::OutgoingMessage;
-use crate::transcoder;
+use tauri::{self, AppHandle};
+// use crate::transcoder;
 // use crate::encoder::encode;
-
+// use lame;
 
 
 type WavWriterHandle = Arc<Mutex<Option<hound::WavWriter<BufWriter<File>>>>>;
@@ -29,33 +31,76 @@ pub struct AudioInput {
     pub device: Device,
 }
 
-pub struct RecordState {
-    clip: AudioClip,
-}
-
 
 pub struct RecordHandle {
     stream: Stream,
     /// Option is only taken in "stop".
-    clip: Arc<Mutex<Option<RecordState>>>,
-    pub writer: Arc<Mutex<Option<WavWriter<BufWriter<File>>>>>,
+    pub clip: Arc<Mutex<Option<AudioClip>>>,
+    pub writer: WavWriterHandle,
     pub path: String,
+    pub dir: String,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+pub struct CnctdHeader {
+    pub audio_format: u16,
+    pub channel_count: u16,
+    pub sampling_rate: u32,
+    pub bytes_per_second: u32,
+    pub bytes_per_sample: u16,
+    pub bits_per_sample: u16,
+}
+
+impl CnctdHeader {
+    pub fn from_wav_spec(spec: WavSpec) -> Self {
+        let audio_format = match spec.sample_format {
+            hound::SampleFormat::Int => 0x01,
+            hound::SampleFormat::Float => 0x03
+        };
+        let header = wav::header::Header::new(audio_format, spec.channels, spec.sample_rate, spec.bits_per_sample);
+        let cnctd_header = Self { 
+            audio_format: header.audio_format,
+            channel_count: header.channel_count, 
+            sampling_rate: header.sampling_rate, 
+            bytes_per_second: header.bytes_per_second, 
+            bytes_per_sample: header.bytes_per_sample, 
+            bits_per_sample: header.bits_per_sample 
+        };
+        cnctd_header
+    }
+}
 
 impl RecordHandle {
-    pub fn stop(self) -> Result<String, anyhow::Error> {
+    pub fn stop(self) -> Result<(Vec<f32>, Vec<f32>), anyhow::Error> {
         drop(self.stream);
-        // let clip = self.clip.lock().unwrap().take().unwrap().clip;
-        self.writer.lock().unwrap().take().unwrap().finalize().unwrap();
         println!("stream dropped");
-        let encoded = AudioClip::encode(self.path)?;
-        Ok(encoded)
-        // handle.writer.lock().unwrap().take().unwrap().finalize().unwrap();
-        // clip.lock().unwrap().take().unwrap().finalize()?;
+        let writer = self.writer.lock().unwrap().take().ok_or(anyhow!("error getting writer"))?;
+        let spec = writer.spec();
+        let length = writer.len();
+        let audio_format = match spec.sample_format {
+            hound::SampleFormat::Int => wav::header::WAV_FORMAT_PCM,
+            hound::SampleFormat::Float => wav::header::WAV_FORMAT_IEEE_FLOAT
+        };
+        let header = wav::header::Header::new(audio_format, spec.channels, spec.sample_rate, spec.bits_per_sample);
+
+        writer.finalize()?;
+        println!("spec: {:?}", spec);
+        println!("header: {:?}", header);
         
-        // println!("Recorded clip has {} samples", writer.samples.len());
-        // clip
+        let wav_reader = hound::WavReader::open(&self.path).unwrap();
+        
+        let samples = wav_reader.into_samples::<f32>();
+
+        let mut left: Vec<f32> = vec![];
+        let mut right: Vec<f32> = vec![];
+        for (i, sample) in samples.enumerate() {
+            let sample = sample.unwrap();
+            if i % 2 == 0 { left.push(sample) } else { right.push(sample) }
+            if i == length as usize - 1 { break }
+        }
+       
+        Ok((left, right))
+    
     }
 }
 
@@ -65,36 +110,37 @@ pub trait StreamHandle {
     fn time(&self) -> f64;
 }
 
-impl StreamHandle for RecordHandle {
-    fn sample_rate(&self) -> u32 {
-        let mut state = self.clip.lock().unwrap();
-        let state = state.as_mut().unwrap();
+// impl StreamHandle for RecordHandle {
+//     fn sample_rate(&self) -> u32 {
+//         let mut state = self.clip.lock().unwrap();
+//         let state = state.as_mut().unwrap();
 
-        state.clip.sample_rate
-    }
+//         state.clip.sample_rate
+//     }
 
-    fn samples(&self) -> usize {
-        let mut state = self.clip.lock().unwrap();
-        let state = state.as_mut().unwrap();
+//     fn samples(&self) -> usize {
+//         let mut state = self.clip.lock().unwrap();
+//         let state = state.as_mut().unwrap();
 
-        state.clip.samples.len()
-    }
+//         state.clip.samples.len()
+//     }
 
-    fn time(&self) -> f64 {
-        let mut state = self.clip.lock().unwrap();
-        let state = state.as_mut().unwrap();
+//     fn time(&self) -> f64 {
+//         let mut state = self.clip.lock().unwrap();
+//         let state = state.as_mut().unwrap();
 
-        (state.clip.samples.len()) as f64 / (state.clip.sample_rate as f64)
-    }
-}
+//         (state.clip.samples.len()) as f64 / (state.clip.sample_rate as f64)
+//     }
+// }
 
 #[derive(Clone)]
 pub struct AudioClip {
     pub date: DateTime<Utc>,
-    pub samples: Vec<f32>,
-    // pub samples_l: Vec<f32>,
-    // pub samples_r: Vec<f32>,
+    // pub samples: Vec<f32>,
+    pub samples_l: Vec<f32>,
+    pub samples_r: Vec<f32>,
     pub sample_rate: u32,
+    pub sample_format: hound::SampleFormat
 }
 
 impl AudioInput {
@@ -136,13 +182,7 @@ impl AudioInput {
 impl AudioClip {
     pub fn record(app_handle: &AppHandle) -> Result<RecordHandle, anyhow::Error> {
         let input = AudioInput::new(None)?;
-        let clip = AudioClip {
-            date: Utc::now(),
-            // samples_l: Vec::new(),
-            // samples_r: Vec::new(),
-            samples: Vec::new(),
-            sample_rate: input.config.sample_rate.0,
-        };
+        
 
         // let PATH: &str = &format!("{}{}", &filename, "/recorded.wav");
         let dir = app_handle.path_resolver().resource_dir().unwrap().into_os_string().into_string().unwrap();
@@ -153,20 +193,35 @@ impl AudioClip {
         println!("path: {}", path);
         let config = &input.device.default_input_config()?;
         let spec = wav_spec_from_config(&config);
-        let writer = hound::WavWriter::create(path.to_string(), spec)?;
-        let writer = Arc::new(Mutex::new(Some(writer)));
-    
-        let clip = Arc::new(Mutex::new(Some(RecordState { clip })));
+        println!("spec!: {:?}", spec);
         
+
+
+        let clip = AudioClip {
+            date: Utc::now(),
+            samples_l: vec![] as Vec<f32>,
+            samples_r: vec![] as Vec<f32>,
+            // samples: Vec::new(),
+            sample_rate: input.config.sample_rate.0,
+            sample_format: spec.sample_format
+        };
+
+
+        let writer = hound::WavWriter::create(std::path::Path::new(&path), spec)?;
+
+        let writer = Arc::new(Mutex::new(Some(writer)));
+        
+        let clip = Arc::new(Mutex::new(Some(clip)));
+
     
         println!("start recording");
         let err_fn = move |err| {
             println!("an error occurred on stream: {}", err);
         };
-
+        let clip_2 = clip.clone();
         let writer_2 = writer.clone();
     
-        fn write_to_wav<T, U>(input: &[T], writer: &WavWriterHandle) where T: cpal::Sample, U:cpal::Sample + hound::Sample + FromSample<T> {
+        fn write_to_wav<T, U>(input: &[T], writer: &WavWriterHandle) where T: Sample, U: Sample + hound::Sample + FromSample<T> {
             if let Ok(mut guard) = writer.try_lock() {
                 if let Some(writer) = guard.as_mut() {
                     for &sample in input.iter() {
@@ -176,51 +231,43 @@ impl AudioClip {
                 }
             }
         }
+
         fn wav_spec_from_config(config: &cpal::SupportedStreamConfig) -> hound::WavSpec {
             hound::WavSpec {
                 channels: config.channels() as _,
                 sample_rate: config.sample_rate().0 as _,
                 bits_per_sample: (config.sample_format().sample_size() * 8) as _,
-                sample_format: hound::SampleFormat::Float,
+                sample_format: sample_format(config.sample_format()),
             }
         }
-        let stream = input.device.build_input_stream(
-            &input.config.into(), 
-            move |data, _: &_| { write_to_wav::<f32, f32>(data, &writer_2) }, 
-            err_fn,  
-        )?;
+   
+        println!("config!: {:?}", config);
+        let stream = match config.sample_format() {
+            cpal::SampleFormat::I16 => input.device.build_input_stream(
+                &input.config.into(),
+                move |data, _: &_| write_to_wav::<i16, i16>(data, &writer_2),
+                err_fn,
+            )?,
+
+            cpal::SampleFormat::F32 => input.device.build_input_stream(
+                &input.config.into(),
+                move |data, _: &_| write_to_wav::<f32, f32>(data, &writer_2),
+                err_fn,
+            )?,
+            cpal::SampleFormat::U16 => input.device.build_input_stream(
+                &input.config.into(),
+                move |data, _: &_| write_to_wav::<i16, i16>(data, &writer_2),
+                err_fn,
+            )?
+        };
+
     
         stream.play()?;
     
-        Ok(RecordHandle { stream, clip, writer, path })
+        Ok(RecordHandle { stream, clip, writer, path, dir })
     
     }
-    pub fn resample(&self, sample_rate: u32) -> AudioClip {
-        if self.sample_rate == sample_rate {
-            return self.clone();
-        }
 
-        let mut signal = signal::from_iter(self.samples.iter().copied());
-
-        let a = signal.next();
-        let b = signal.next();
-
-        let linear = Linear::new(a, b);
-        
-
-        AudioClip {
-            date: self.date,
-            samples: signal.from_hz_to_hz(linear, self.sample_rate as f64, sample_rate as f64)
-                .take(self.samples.len() * (sample_rate as usize) / (self.sample_rate as usize))
-                .collect(),
-            sample_rate,
-        }
-    }
-
-    pub fn encode(filename: String) -> Result<String,anyhow::Error> {
-        let output = transcoder::transcode(filename.to_string())?;
-        Ok(output)
-    }
 }
 
 
@@ -249,3 +296,9 @@ pub fn get_devices() -> Result<serde_json::Value, anyhow::Error> {
 
 }
 
+fn sample_format(format: cpal::SampleFormat) -> hound::SampleFormat {
+    match format {
+        cpal::SampleFormat::I16 | cpal::SampleFormat::U16 => return hound::SampleFormat::Int,
+        cpal::SampleFormat::F32 => return hound::SampleFormat::Float
+    }
+}

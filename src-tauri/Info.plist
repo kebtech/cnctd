@@ -38,6 +38,8 @@
 	<string>Need microphone access to record audio</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location used for tagging new recordings</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Need camera access for uploading images</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>

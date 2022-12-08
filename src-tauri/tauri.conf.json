@@ -29,6 +29,9 @@
       "protocol": {
         "asset": true,
         "assetScope": ["**"]
+      },
+      "app": {
+        "all": true
       }
     },
     "macOSPrivateApi": true,
@@ -53,7 +56,8 @@
         "entitlements": "Entitlements.plist",
         "exceptionDomain": null,
         "frameworks": [],
-        "providerShortName": null
+        "providerShortName": null,
+        "signingIdentity": null
       },
       "resources": ["recordings"],
       "shortDescription": "organize your songwriting",
