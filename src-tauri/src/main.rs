@@ -26,7 +26,7 @@ fn main() {
 		])
 		.setup(|app| {
 			let window = app.get_window("main").unwrap();
-	  
+			window.open_devtools();
 			#[cfg(target_os = "macos")]
 			apply_vibrancy(&window, NSVisualEffectMaterial::UnderWindowBackground, None, None)
 			  .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
