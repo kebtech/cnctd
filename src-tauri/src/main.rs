@@ -22,7 +22,8 @@ fn main() {
 			router::get_recorder_inputs,
 			router::stop_recording,
 			router::start_tuner,
-			router::stop_tuner
+			router::stop_tuner,
+			router::test,
 		])
 		.setup(|app| {
 			let window = app.get_window("main").unwrap();

@@ -150,3 +150,8 @@ pub fn stop_tuner() -> Result<String, String> {
     drop(status);
     Ok("stopped".into())
 }
+
+#[tauri::command]
+pub fn test(msg: String) {
+    println!("from client: {}", msg);
+}
