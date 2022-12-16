@@ -1,21 +1,24 @@
 <template>
 <div class="sign_up">
     <div class="not_signed_up" v-if="!submission.signedUp">
-        <div class="top" :class="invitation.valid? 'dim': 'bright'">
+        <div class="top">
             <div class="description">{{dashboard.descriptions.signUp}}</div>
-            <input class="invitation_url"
-                ref="invitation_url" 
-                placeholder="paste invitation link here" 
-                @input="handlePaste" />
-            <div class="status" v-if="invitation.url.length > 0">
-                <div v-if="invitation.valid" 
-                    class="accepted">
+            <div :class="invitation.valid? 'dim': 'bright'">
+                <input class="invitation_url"
+                    ref="invitation_url" 
+                    placeholder="paste invitation link here" 
+                    @input="handlePaste" />
+                <div class="status" v-if="invitation.url.length > 0">
+                    <div v-if="invitation.valid" 
+                        class="accepted">
+                    </div>
+                    <div v-if="!invitation.valid"
+                        class="rejected">
+                    </div>
+                    <div class="status_message">{{invitation.valid? 'valid invite': invitation.error}}</div>
                 </div>
-                <div v-if="!invitation.valid"
-                    class="rejected">
-                </div>
-                <div class="status_message">{{invitation.valid? 'valid invite': invitation.error}}</div>
             </div>
+            
         </div>
         
         <form>
