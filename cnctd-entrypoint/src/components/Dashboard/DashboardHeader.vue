@@ -3,6 +3,9 @@
     <div class="logo"
         @click="dashboard.currentView = 'Home'">
         <img class="logo_img" src="../../assets/logo.png">
+        <!-- <div class="title" :class="{ 
+                selected: dashboard.currentView === 'Home',
+            }">nctd</div> -->
     </div>
     <div class="headings">
         <div v-for="heading in ['Download', 'Sign Up', 'WebApp']"
@@ -53,6 +56,13 @@ export default defineComponent({
     margin-top: 15px;
     margin-left: 10px;
     cursor: pointer;
+    display: flex;
+}
+.title {
+    color: white;
+    font-size: 1.4rem;
+    margin-top: auto;
+    margin-bottom: 0;
 }
 .logo_img {
     border-radius: 50%;

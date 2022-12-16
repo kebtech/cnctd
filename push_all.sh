@@ -26,6 +26,6 @@ git add .
 git commit -m $VAR
 git push
 
-# wait
+wait
 
-# sh package.sh
+sh package.sh

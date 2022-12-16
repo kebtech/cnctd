@@ -173,7 +173,7 @@ impl AudioInput {
             config,
             device,
         };
-
+        println!("input device: {}", input.name);
         Ok(input)
 
     }

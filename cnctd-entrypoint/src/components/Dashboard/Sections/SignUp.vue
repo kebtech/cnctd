@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, reactive, Ref, ref } from 'vue';
+import { defineComponent, inject, onMounted, reactive, Ref, ref } from 'vue';
 import { dashboard } from '../dashboard';
 import { server } from '@/server/server';
 
@@ -196,6 +196,16 @@ export default defineComponent({
             
         };
 
+        onMounted(() => {
+            const path = location.pathname.split('/')[1];
+            console.log('path', path)
+            if (path === 'invitation') {
+                invitation_url.value!.value = location.href;
+                dashboard.currentView = 'Sign Up';
+                handlePaste()
+            }
+        })
+
         return {
             dashboard,
             submit,
@@ -255,10 +265,10 @@ input {
     margin-top: 5px;
 }
 .validate:valid {
-    outline: 2px solid #00800099;
+    outline: 2px solid v-bind("store.colors.file + 99");
 }
 .valid_input {
-    outline: 2px solid #00800099;
+    outline: 2px solid v-bind("store.colors.file + 99");
 }
 .invalid_input {
     outline: 2px solid #ff000099;
@@ -267,7 +277,7 @@ input {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #00800099;
+    background: v-bind("store.colors.file + 99");
     margin-right: 10px;
     margin-bottom: 5px;
     margin-top: auto;
@@ -336,7 +346,7 @@ input {
     opacity: .2;
 }
 .accept_check input[type="checkbox"]:checked ~ .b-input {
-  background: #00800099;
+  background: v-bind("store.colors.file + 99");;
   /* border-color: #1d4ed8; */
 }
 

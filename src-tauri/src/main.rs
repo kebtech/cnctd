@@ -22,12 +22,11 @@ fn main() {
 			router::get_recorder_inputs,
 			router::stop_recording,
 			router::start_tuner,
-			router::stop_tuner,
-			router::test,
+			router::stop_tuner
 		])
 		.setup(|app| {
 			let window = app.get_window("main").unwrap();
-			window.open_devtools();
+	  
 			#[cfg(target_os = "macos")]
 			apply_vibrancy(&window, NSVisualEffectMaterial::UnderWindowBackground, None, None)
 			  .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");

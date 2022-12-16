@@ -10,11 +10,7 @@ const dashboard = reactive({
     descriptions
 });
 
-const path = location.pathname.split('/')[1];
 
-// if (path === 'invitation') {
-    
-// }
 
 export {
     dashboard
