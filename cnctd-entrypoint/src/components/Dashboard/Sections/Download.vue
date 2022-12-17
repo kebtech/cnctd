@@ -1,13 +1,15 @@
 <template>
     <div class="download">
         <div class="heading">Downloads</div>
+        <button @click="listBuilds">List Files</button>
         <button @click="download('ios')">iOS</button>
         <button @click="download('mac')">Mac</button>
     </div>
     </template>
     
     <script lang="ts">
-    import { defineComponent } from 'vue';
+    import { server } from '@/server/server';
+import { defineComponent } from 'vue';
     
     export default defineComponent({
         setup() {
@@ -19,10 +21,15 @@
                 link.href = dataurl;
                 link.download = filename;
                 link.click();
+            };
+
+            const listBuilds = () => {
+                server.post('builds', 'list');
             }
 
             return {
-                download
+                download,
+                listBuilds
             }
         },
     
