@@ -10,7 +10,7 @@ const server = {
         const msg = JSON.stringify({ channel, instruction, data, response_channel, id: server.clientId, user_id: 0, jwt: ''});
 
         // const url = `${location.protocol}//${location.hostname + ':5050'}/rest`
-        const url = `https://app.cnctd.world/rest`
+        const url = `https://cnctd.world`
         console.log('post url', url);
         console.log('post msg', msg);
         fetch(url, {
