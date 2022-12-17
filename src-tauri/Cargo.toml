@@ -35,7 +35,7 @@ wav = "1.0.0"
 # ffmpeg-next = "5.1.1"
 # tauri-cli = "1.2.0"
 embed_plist = "1.2.2"
-base64 = "0.13.1"
+# base64 = "0.13.1"
 dotenv = "0.15.0"
 pitch-detection = "0.3"
 
