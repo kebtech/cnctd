@@ -24,7 +24,7 @@ import { defineComponent } from 'vue';
             };
 
             const listBuilds = () => {
-                server.post('builds', 'list');
+                server.get('builds', 'list', {test: "test"});
             }
 
             return {
