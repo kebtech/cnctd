@@ -31,13 +31,13 @@ const server = {
             .catch(e => err(e))
         })
     },
-    get: (channel: string, instruction?: string, data?: any): Promise<any> => {
+    get: (channel: string, instruction?: string): Promise<any> => {
         return new Promise((ok, err) => {
         const response_channel: string = uuidv4();
 
 
         // const msg = JSON.stringify();
-        const params: any = { channel, instruction, data };
+        const params: any = { channel, instruction };
         const query = Object.keys(params)
              .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
              .join('&');
