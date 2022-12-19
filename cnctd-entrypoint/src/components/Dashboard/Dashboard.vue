@@ -3,7 +3,7 @@
     <DashboardHeader/>
     <div class="padding"></div>
     <Home v-show="dashboard.currentView === 'Home'" />
-    <Download v-show="dashboard.currentView === 'Download'" />
+    <Download v-if="dashboard.currentView === 'Download'" />
     <SignUp v-show="dashboard.currentView === 'Sign Up'" />
     <footer>
         <DashboardFooter />

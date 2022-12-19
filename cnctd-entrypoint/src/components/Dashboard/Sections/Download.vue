@@ -6,6 +6,12 @@
             <button class="download" @click="download(build)">{{ build.filename }}</button>
         </div>
     </div>
+    <div class="ios_builds">
+        <div v-for="build in builds.ios"
+            :key="build.filename">
+            <button class="download" @click="download(build)">{{ build.filename }}</button>
+        </div>
+    </div>
 </div>
 </template>
 
