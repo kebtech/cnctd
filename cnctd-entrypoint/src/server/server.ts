@@ -6,11 +6,11 @@ const server = {
         return new Promise((ok, err) => {
         // const response_channel: string = uuidv4();
 
+        const msgData = data? data: {}
+        const msg = JSON.stringify({ channel, instruction, data: msgData });
 
-        const msg = JSON.stringify({ channel, instruction, data: data });
-
-        // const url = `${location.protocol}//${location.hostname + ':5050'}/rest`
-        const url = `https://cnctd.world/rest`
+        const url = `${location.protocol}//${location.hostname + ':5051'}/rest`
+        // const url = `https://cnctd.world/rest`
         console.log('post url', url);
         console.log('post msg', msg);
         fetch(url, {
@@ -22,7 +22,7 @@ const server = {
             body: msg
         })
             .then(response => {
-                console.log
+                // console.log(response)
                 return Promise.all([response.json(),response])
             })
             .then(([responseData,response]) => {
