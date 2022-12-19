@@ -31,7 +31,7 @@ export default defineComponent({
 
         const download = (app: S3File) => {
             // const url = `https://cnctd.world/file?path=${app.path}/${app.filename}&bucket=cnctd-builds`
-            const url = `https://cnctd.world/file?path=${app.path}/${app.filename}&bucket=cnctd-builds`
+            const url = `https://cnctd.world/api/file?path=${app.path}/${app.filename}&bucket=cnctd-builds`
             const link = document.createElement("a");
             link.href = url;
             link.download = app.filename;
