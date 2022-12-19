@@ -1,7 +1,5 @@
 <template>
 <div class="download">
-    <div class="heading">Downloads</div>
-    <button @click="listBuilds">List Files</button>
     <div class="mac_builds">
         <div v-for="build in builds.mac"
             :key="build.filename">
@@ -26,8 +24,8 @@ export default defineComponent({
     setup() {
 
         const download = (app: S3File) => {
-            // const url = `https://cnctd.world/file/${app.path}/${app.filename}`
-            const url = `http://192.168.1.7:5051/api/file?path=${app.path}/${app.filename}&bucket=cnctd-builds`
+            // const url = `https://cnctd.world/file?path=${app.path}/${app.filename}&bucket=cnctd-builds`
+            const url = `https://cnctd.world/file?path=${app.path}/${app.filename}&bucket=cnctd-builds`
             const link = document.createElement("a");
             link.href = url;
             link.download = app.filename;
@@ -39,7 +37,7 @@ export default defineComponent({
             ios: [] as S3File[],
         });
 
-        const listBuilds = () => {
+        const getBuilds = () => {
             server.post('builds', 'list')
                 .then(r => {
                     console.log(r)
@@ -50,10 +48,10 @@ export default defineComponent({
                     files.ios.forEach((f: S3File) => builds.ios.push(f))
                 })
         }
+        getBuilds()
 
         return {
             download,
-            listBuilds,
             builds
         }
     },

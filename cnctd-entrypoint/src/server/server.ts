@@ -9,8 +9,8 @@ const server = {
         const msgData = data? data: {}
         const msg = JSON.stringify({ channel, instruction, data: msgData });
 
-        const url = `${location.protocol}//${location.hostname + ':5051'}/rest`
-        // const url = `https://cnctd.world/rest`
+        // const url = `${location.protocol}//${location.hostname + ':5051'}/rest`
+        const url = `https://cnctd.world/rest`
         console.log('post url', url);
         console.log('post msg', msg);
         fetch(url, {
