@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <rect style="stroke: rgb(20, 20, 20); stroke-width: 17px; fill: rgb(89, 89, 89);" width="479.129" height="479.129" ry="50" rx="50" x="10.008" y="10.008"/>
+  <path d="M 249.573 249.573 m -203.63 0 a 203.63 203.63 0 1 0 407.26 0 a 203.63 203.63 0 1 0 -407.26 0 Z M 249.573 249.573 m -17.926 0 a 17.926 17.926 0 0 1 35.852 0 a 17.926 17.926 0 0 1 -35.852 0 Z" style="stroke: rgb(20, 20, 20); fill: rgb(40, 137, 255); stroke-width: 14px;" bx:shape="ring 249.573 249.573 17.926 17.926 203.63 203.63 1@2e4e8194"/>
+  <ellipse style="stroke: rgb(20, 20, 20); fill: rgb(40, 137, 255); stroke-width: 14px; visibility: hidden;" cx="249.573" cy="249.573" rx="203.63" ry="203.63"/>
+  <path style="stroke: rgb(20, 20, 20); stroke-linejoin: round; fill: rgb(111, 218, 140); stroke-linecap: round; stroke-width: 6.37023px;" transform="matrix(2.197723, 0, 0, 2.19772, -783.218201, -821.147461)" d="M 520.400529789 564.870021473 A 92.655 92.655 0 1 1 498.568969614 399.042858483 L 481.281940914 452.246862117 A 36.713 36.713 0 1 0 489.932332893 517.953112561 Z" bx:shape="pie 469.937 487.163 36.713 92.655 147 18 1@62822c64"/>
+  <ellipse style="fill: rgb(20, 20, 20); visibility: hidden;" cx="250.077" cy="250.077" rx="17.249" ry="17.249"/>
+  <rect x="295.487" y="80.849" width="14" height="243.597" style="fill: rgb(20, 20, 20);" transform="matrix(0.979174, 0.203024, -0.203024, 0.979174, 155.084488, -85.791214)" rx="2.076" ry="2.076"/>
+  <rect x="295.487" y="16.069" width="14" height="48.417" style="fill: rgb(20, 20, 20);" transform="matrix(0.55019, 0.835039, -0.935226, 0.398134, 240.646118, 28.625124)" rx="7" ry="7"/>
+</svg>
