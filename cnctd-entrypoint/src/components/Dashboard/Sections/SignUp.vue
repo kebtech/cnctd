@@ -203,9 +203,11 @@ export default defineComponent({
             const path = location.pathname.split('/')[1];
             console.log('path', path)
             if (path === 'invitation') {
-                invitation_url.value!.value = location.href;
+                if (location.href.includes('?')) invitation_url.value!.value = location.href;
                 dashboard.currentView = 'Sign Up';
                 handlePaste()
+            } else if (path === 'download') {
+                dashboard.currentView = 'Download';
             }
         })
 

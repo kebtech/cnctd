@@ -10,6 +10,10 @@ const dashboard = reactive({
     descriptions
 });
 
+const path = location.pathname.split('/')[1];
+if (path === 'download') {
+    dashboard.currentView = 'Download';
+}
 
 
 export {
