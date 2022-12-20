@@ -2,7 +2,7 @@
 <div class="dashboard_header">
     <div class="logo"
         @click="dashboard.currentView = 'Home'">
-        <img class="logo_img" src="../../assets/logo.png">
+        <img class="logo_img" src="../../assets/logo.svg">
         <!-- <div class="title" :class="{ 
                 selected: dashboard.currentView === 'Home',
             }">nctd</div> -->
