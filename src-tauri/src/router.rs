@@ -155,3 +155,9 @@ pub fn stop_tuner() -> Result<String, String> {
 pub fn test(msg: String) {
     println!("from client: {}", msg);
 }
+
+#[tauri::command]
+pub fn open_url(url: String) -> Result<(), String> {
+    open::that(url).map_err(|e| e.to_string())?;
+    Ok(())
+}

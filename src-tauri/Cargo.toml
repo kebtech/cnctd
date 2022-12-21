@@ -38,6 +38,7 @@ embed_plist = "1.2.2"
 # base64 = "0.13.1"
 dotenv = "0.15.0"
 pitch-detection = "0.3"
+open = "3.2.0"
 
 [features]
 # by default Tauri runs in production mode

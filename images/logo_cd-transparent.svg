@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <path style="stroke: rgb(20, 20, 20); fill: none; stroke-width: 10px;" d="M 71.506 50.869 H 469.762 A 3 3 0 0 1 472.762 53.869 V 449.125 A 3 3 0 0 1 469.762 452.125 H 71.506 V 50.869 Z" bx:shape="rect 71.506 50.869 401.256 401.256 0 3 3 0 1@7de884ee"/>
+  <path d="M 269.239 251.673 m -175.528 0 a 175.528 175.528 0 1 0 351.056 0 a 175.528 175.528 0 1 0 -351.056 0 Z M 269.239 251.673 m -27.069 0 a 27.069 27.069 0 0 1 54.138 0 a 27.069 27.069 0 0 1 -54.138 0 Z" style="stroke: rgb(20, 20, 20); fill: rgb(40, 137, 255); stroke-width: 10px;" bx:shape="ring 269.239 251.673 27.069 27.069 175.528 175.528 1@c584f9fc"/>
+  <ellipse style="stroke: rgb(20, 20, 20); fill: rgb(40, 137, 255); stroke-width: 14px; visibility: hidden;" cx="276.77" cy="258.566" rx="161.331" ry="161.331"/>
+  <path style="stroke-linejoin: round; fill: rgb(111, 218, 140); stroke-linecap: round; stroke-width: 6.37023px;" transform="matrix(1.816452, 0, 0, 1.816448, -584.377502, -633.293579)" d="M 521.013 565.813 A 93.78 93.78 0 1 1 498.917 397.973 L 481.282 452.247 A 36.713 36.713 0 1 0 489.932 517.953 Z" bx:shape="pie 469.937 487.163 36.713 93.78 147 18 1@d8495bca"/>
+  <path style="stroke: rgb(20, 20, 20); fill: none; stroke-width: 10px;" d="M 26.259 50.869 H 67.744 V 452.125 H 26.259 A 3 3 0 0 1 23.259 449.125 V 53.869 A 3 3 0 0 1 26.259 50.869 Z" bx:shape="rect 23.259 50.869 44.485 401.256 3 0 0 3 1@f48f9dd6"/>
+  <text style="font-family: &quot;Marker Felt&quot;; font-size: 91.3px; font-style: italic; font-weight: 100; white-space: pre; visibility: hidden;" x="153.339" y="195.354">cnctd</text>
+</svg>

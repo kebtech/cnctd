@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <rect width="500" height="500" style="fill: rgb(255, 255, 255);"/>
+  <rect style="stroke: rgb(20, 20, 20); fill: rgb(255, 255, 255); stroke-width: 6px;" width="324.659" height="324.659" y="92.302" x="103.697"/>
+  <path d="M 265.684 255.267 m -150.004 0 a 150.004 150.004 0 1 0 300.008 0 a 150.004 150.004 0 1 0 -300.008 0 Z M 265.684 255.267 m -23.133 0 a 23.133 23.133 0 0 1 46.266 0 a 23.133 23.133 0 0 1 -46.266 0 Z" style="stroke: rgb(20, 20, 20); fill: rgb(40, 137, 255); stroke-width: 10px;" bx:shape="ring 265.684 255.267 23.133 23.133 150.004 150.004 1@3d2e6203"/>
+  <ellipse style="stroke: rgb(20, 20, 20); fill: rgb(40, 137, 255); stroke-width: 14px; visibility: hidden;" cx="265.684" cy="255.267" rx="143.83" ry="143.83"/>
+  <path style="stroke-linejoin: round; fill: rgb(111, 218, 140); stroke-linecap: round; stroke-width: 6.37023px;" transform="matrix(1.55232, 0, 0, 1.552317, -463.809235, -501.016846)" d="M 520.814 565.507 A 93.414 93.414 0 1 1 498.804 398.321 L 481.282 452.247 A 36.713 36.713 0 1 0 489.932 517.953 Z" bx:shape="pie 469.937 487.163 36.713 93.414 147 18 1@9b772b5d"/>
+  <rect style="stroke: rgb(20, 20, 20); fill: rgb(255, 255, 255); stroke-width: 6px;" width="35.993" height="324.659" y="92.302" x="64.66"/>
+</svg>

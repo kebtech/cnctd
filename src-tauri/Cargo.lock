@@ -80,6 +80,7 @@ dependencies = [
  "dotenv",
  "embed_plist",
  "hound",
+ "open",
  "pitch-detection",
  "serde",
  "serde_json",
