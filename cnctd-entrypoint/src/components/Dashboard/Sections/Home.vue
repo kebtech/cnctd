@@ -1,16 +1,19 @@
 <template>
 <div class="home">
-    <div class="heading">Welcome to cnctd</div>
+    <div class="heading">{{ dashboard.descriptions.home }}</div>
 </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { dashboard } from '../dashboard';
 
 export default defineComponent({
     setup() {
 
-        return {}
+        return {
+            dashboard
+        }
     },
 
 })
