@@ -23,6 +23,8 @@ pub fn start(app_handle: AppHandle) -> Result<Stream, anyhow::Error> {
         buffer_size: cpal::BufferSize::Fixed(2048) 
     };
     println!("config: {:?}", config);
+    let buffer_size_range = &config.buffer_size;
+    println!("buffer size: {:?}, ", buffer_size_range);
     println!("input: {}", input.name);
     let sample_rate = config.sample_rate.0 as usize;
     let stream = input.device.build_input_stream(
@@ -33,7 +35,7 @@ pub fn start(app_handle: AppHandle) -> Result<Stream, anyhow::Error> {
     
     println!("sample Rate: {}", sample_rate);
     // const SAMPLE_RATE: usize = 44100;
-    const SIZE: usize = 4096;
+    const SIZE: usize = 2048;
     const PADDING: usize = SIZE / 2;
     const POWER_THRESHOLD: f32 = 0.01;
     const CLARITY_THRESHOLD: f32 = 0.5;
