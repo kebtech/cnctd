@@ -7,4 +7,9 @@ wait
 
 source /Users/kyleebner/.bash_profile
 
+version=$(npm version patch --no-git-tag-version)
+
+patch=$(${version##*.})
+echo ${patch}
+
 cargo tauri build
